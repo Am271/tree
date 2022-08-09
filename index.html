@@ -4,29 +4,25 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Tree</title>
-	<style type="text/css">
-		html, body{
-		    margin: 0;
-		    height: 100%;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
 	<div>
-		<div style="padding: 2px; border: 1px solid black; display: inline-block;" id="draw">
-			Draw
+		<div class="text-holder" id="draw">
+			<div id="draw_">Draw</div>
 		</div>
-		<div style="padding: 2px; border: 1px solid black; display:	inline-block;" id="text">
-			Text
+		<div class="text-holder" id="text">
+			<div id="text_">Text</div>
 		</div>
-		<div style="padding: 2px; border: 1px solid black; display: inline-block;" id="line1">
-			Line Start
+		<div class="text-holder" id="line1">
+			<div id="line1_">Line Start</div>
 		</div>
-		<div style="padding: 2px; border: 1px solid black; display: inline-block;" id="line2">
-			Line End
+		<div class="text-holder" id="line2">
+			<div cid="line2_">Line End</div>
 		</div>
-		<div style="padding: 2px; border: 1px solid black; display: inline-block;"
-		><input type="text" name="" id="text_"></div>
+		<div class="text-holder">
+			<input type="text" name="" id="text_value">
+		</div>
 		<canvas id="myCanvas"></canvas>
 	</div>
 	<script type="text/javascript" src="index.js"></script>
