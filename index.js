@@ -10,8 +10,34 @@ canvas.height = window.innerHeight;
 ctx.fillStyle="cyan";
 ctx.font = "22px Arial";
 
-function isIntersect(point, circle) {
-  return Math.sqrt((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) < radius;
+function computeVal(point, circle) {
+  let slope = (point.y - circle.y) / (point.x - circle.x);
+  let angle = Math.atan(slope);
+  // angle = angle * (180 / Math.PI) - 90;
+  if(point.x < circle.x) {
+    tmp_angle = angle - (180 * Math.PI / 180);
+    point.x = circle.x + (radius * Math.cos(tmp_angle));
+    point.y = circle.y + (radius * Math.sin(tmp_angle));
+  }
+  else {
+    point.x = circle.x + (radius * Math.cos(angle));
+    point.y = circle.y + (radius * Math.sin(angle));
+  }
+  // console.log(slope);
+  point.y -= offsety;
+}
+
+function getVal() {
+  const pos = {
+    x: event.clientX,
+    y: event.clientY
+  };
+  circles.forEach(circle => {
+    if (Math.sqrt((pos.x-circle.x) ** 2 + (pos.y - circle.y) ** 2) < radius) {
+      computeVal(pos, circle);
+    }
+  });
+  return pos;
 }
 
 function checkState(x) {
@@ -28,18 +54,9 @@ function checkState(x) {
 }
 
 function action(event) {
-  const pos = {
-    x: event.clientX,
-    y: event.clientY
-  };
-  circles.forEach(circle => {
-    if (isIntersect(pos, circle)) {
-      console.log('yay')
-    }
-  });
 
   ctx.fillStyle = "cyan";
-  console.log(state)
+
   switch(state) {
     case 0:
       ctx.beginPath(); //starts a new line
@@ -50,7 +67,8 @@ function action(event) {
     
     case 1:
       ctx.beginPath();
-      ctx.moveTo(event.clientX, event.clientY - offsety); state = 3; checkState(state); break;
+      pos = getVal();
+      ctx.moveTo(pos.x, pos.y); state = 3; checkState(state); break;
       break;
     
     case 2:
@@ -59,7 +77,8 @@ function action(event) {
       break;
     
     case 3:
-      ctx.lineTo(event.clientX, event.clientY - offsety); ctx.stroke(); state = 1; checkState(state);
+      pos = getVal();
+      ctx.lineTo(pos.x, pos.y); ctx.stroke(); state = 1; checkState(state);
       break;
   }
 }
