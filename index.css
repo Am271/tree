@@ -1,6 +1,10 @@
-html, body{
-    margin: 0;
-    height: 100%;
+html, body {
+	margin: 0;
+	height: 100%;
+}
+
+#container {
+	padding: 3px;
 }
 
 .text-holder {
@@ -8,8 +12,20 @@ html, body{
 	border: 1px solid black;
 	display: inline-block;
 	cursor: default;
+	border-radius: 5px;
+	margin: 3px;
+	margin-bottom: 20px;
 }
 
 .innerbox {
 	border: 3px solid green;
+}
+
+.innerbox-red {
+	border: 3px solid red;
+}
+
+#canvas {
+	border: 2px dotted black;
+	/*width: 100%;*/
 }
