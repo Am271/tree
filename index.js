@@ -1,7 +1,12 @@
+var state = 0;
 var canvas= document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+let circles = []; radius = 25;
 var btns = [document.getElementById("draw"), document.getElementById("text"), document.getElementById("line1"), document.getElementById("line2")];
 
-let circles = []; radius = 25;
+function isIntersect(point, circle) {
+  return Math.sqrt((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) < radius;
+}
 
 function checkState(x) {
   for(let i = 0; i < btns.length; i++) {
@@ -12,31 +17,7 @@ function checkState(x) {
   }
 }
 
-var state = 0;
-checkState(0);
-// 0 is draw circle
-// 1 is type text
-// 2 is draw line
-
-for(let i = 0; i < btns.length; i++) {
-  btns[i].addEventListener("click", ()=>{state = i; checkState(i);});
-}
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-var ctx = canvas.getContext("2d");
-ctx.fillStyle="cyan";
-ctx.font = "22px Arial";
-
-function isIntersect(point, circle) {
-  return Math.sqrt((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) < radius;
-}
-
-// ctx.arc(200,150,100,0,360);
-// ctx.arc(400,150,50,0,360);
-
-function printMousePos(event) {
+function action(event) {
   // console.log("clientX: " + event.clientX + " - clientY: " + event.clientY);
   // ctx.arc(event.clientX, event.clientY, 20, 0, 360);
   // ctx.stroke();
@@ -70,4 +51,22 @@ function printMousePos(event) {
   }
 }
 
-canvas.addEventListener("click", printMousePos);
+checkState(0);
+// 0 is draw circle
+// 1 is type text
+// 2 is draw line
+
+for(let i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", ()=>{state = i; checkState(i);});
+}
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+ctx.fillStyle="cyan";
+ctx.font = "22px Arial";
+
+// ctx.arc(200,150,100,0,360);
+// ctx.arc(400,150,50,0,360);
+
+canvas.addEventListener("click", action);
