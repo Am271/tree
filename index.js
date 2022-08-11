@@ -4,13 +4,35 @@ var ctx = canvas.getContext("2d");
 let circles = [], radius = 25, offsety = 58;
 let labels = [], lines = [];
 var btns = [document.getElementById("draw"), document.getElementById("line"), document.getElementById("text")];
-var save_ = document.getElementById("save");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 ctx.fillStyle="cyan";
 ctx.font = "22px Arial";
+
+function drawAll(obj) { //invoked only when loading a file
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  circles = obj.circles; labels = obj.labels; lines = obj.lines;
+  
+  circles.forEach(circle => {
+    ctx.beginPath();
+    ctx.arc(circle.x, circle.y - offsety, radius, 0, 2 * Math.PI);
+    ctx.fill();
+  });
+
+  ctx.fillStyle = "black";
+  labels.forEach(label => {
+    ctx.fillText(label.val, label.x, label.y);
+  });
+
+  lines.forEach(line => {
+    ctx.beginPath();
+    ctx.moveTo(line[0].x, line[0].y);
+    ctx.lineTo(line[1].x, line[1].y);
+    ctx.stroke();
+  })
+}
 
 function save() {
   let cdate = new Date();
@@ -33,6 +55,20 @@ function save() {
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);  
   }, 0);
+}
+
+function load() {
+  let e = document.getElementById('file-input');
+  let file = e.files[0];
+  if (!file) {
+    return;
+  }
+  let reader = new FileReader();
+  reader.onload = function(e) {
+    // let contents = e.target.result;
+    drawAll(JSON.parse(e.target.result));
+  };
+  reader.readAsText(file);
 }
 
 function isIntersect(point, c2) {
@@ -124,4 +160,6 @@ for(let i = 0; i < btns.length; i++) {
 }
 
 canvas.addEventListener("click", action);
-save_.addEventListener("click", save);
+document.getElementById("save").addEventListener("click", save);
+document.getElementById("load").addEventListener("click", load);
+// document.getElementById('file-input').addEventListener('change', load, false);
