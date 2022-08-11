@@ -1,9 +1,11 @@
 var state = 0;
 var canvas= document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-let circles = [], radius = 25, offsety = 50;
+let circles = [], radius = 25;
 let labels = [], lines = [];
 var btns = [document.getElementById("draw"), document.getElementById("line"), document.getElementById("text")];
+
+let offsety = canvas.offsetTop + 46;
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -164,3 +166,7 @@ canvas.addEventListener("click", action);
 document.getElementById("save").addEventListener("click", save);
 document.getElementById("load").addEventListener("click", load);
 // document.getElementById('file-input').addEventListener('change', load, false);
+
+window.addEventListener('resize', function(event){
+  offsety = document.getElementById('canvas').offsetTop;
+});
