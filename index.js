@@ -10,34 +10,35 @@ canvas.height = window.innerHeight;
 ctx.fillStyle="cyan";
 ctx.font = "22px Arial";
 
-function computeVal(point, circle) {
-  let slope = (point.y - circle.y) / (point.x - circle.x);
-  let angle = Math.atan(slope);
-  // angle = angle * (180 / Math.PI) - 90;
-  if(point.x < circle.x) {
-    tmp_angle = angle - (180 * Math.PI / 180);
-    point.x = circle.x + (radius * Math.cos(tmp_angle));
-    point.y = circle.y + (radius * Math.sin(tmp_angle));
-  }
-  else {
-    point.x = circle.x + (radius * Math.cos(angle));
-    point.y = circle.y + (radius * Math.sin(angle));
-  }
-  // console.log(slope);
-  point.y -= offsety;
+function isIntersect(point, c2) {
+  return Math.sqrt((point.x-c2.x) ** 2 + (point.y - c2.y) ** 2) < radius;
+  //checks if the distance between the center of the circle and the point clicked is less
 }
 
-function getVal() {
-  const pos = {
-    x: event.clientX,
-    y: event.clientY
-  };
+function computeVal(c1, c2) {
+  let slope = (c1.y - c2.y) / (c1.x - c2.x);
+  let angle = Math.atan(slope); // get the slope at which we draw the line
+  // angle = angle * (180 / Math.PI) - 90;
+  if(c1.x > c2.x) // needed only because the angles lie in the range -180 to +180 (semicircle area is covered)
+    angle = angle - (180 * Math.PI / 180);
+
+  c1.x = c1.x + (radius * Math.cos(angle));
+  c1.y = c1.y + (radius * Math.sin(angle));
+  c1.y -= offsety;
+}
+
+function getCenter() {
+  p = {x:event.clientX, y:event.clientY, center:false}
   circles.forEach(circle => {
-    if (Math.sqrt((pos.x-circle.x) ** 2 + (pos.y - circle.y) ** 2) < radius) {
-      computeVal(pos, circle);
+    if (isIntersect(p, circle)) {
+      p.x = circle.x;
+      p.y = circle.y;
+      p.center = true;
     }
   });
-  return pos;
+  if (!p.center)
+    p.y -= offsety;
+  return p;
 }
 
 function checkState(x) {
@@ -66,9 +67,8 @@ function action(event) {
       break;
     
     case 1:
-      ctx.beginPath();
-      pos = getVal();
-      ctx.moveTo(pos.x, pos.y); state = 3; checkState(state); break;
+      p1 = getCenter();
+      state = 3; checkState(state); break;
       break;
     
     case 2:
@@ -77,22 +77,24 @@ function action(event) {
       break;
     
     case 3:
-      pos = getVal();
-      ctx.lineTo(pos.x, pos.y); ctx.stroke(); state = 1; checkState(state);
+      ctx.beginPath(); p2 = getCenter();
+      if(p1.center)
+        computeVal(p1, p2);
+      if(p2.center)
+        computeVal(p2, p1); // the first argument is always changed
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y); ctx.stroke(); state = 1; checkState(state);
       break;
   }
 }
 
 checkState(0);
-// 0 is draw circle
+// 0 is draw c2
 // 1 & 3 are draw line 
 // 2 is place text
 
 for(let i = 0; i < btns.length; i++) {
   btns[i].addEventListener("click", ()=>{state = i; checkState(i);});
 }
-
-// ctx.arc(200,150,100,0,360);
-// ctx.arc(400,150,50,0,360);
 
 canvas.addEventListener("click", action);
