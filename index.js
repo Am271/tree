@@ -1,7 +1,7 @@
 var state = 0;
 var canvas= document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-let circles = [], radius = 25, offsety = 58;
+let circles = [], radius = 25, offsety = 50;
 let labels = [], lines = [];
 var btns = [document.getElementById("draw"), document.getElementById("line"), document.getElementById("text")];
 
