@@ -26,13 +26,13 @@ function drawAll(obj) { //invoked only when loading a file
 
   ctx.fillStyle = "black";
   labels.forEach(label => {
-    ctx.fillText(label.val, label.x, label.y);
+    ctx.fillText(label.val, label.x, label.y - offsety);
   });
 
   lines.forEach(line => {
     ctx.beginPath();
-    ctx.moveTo(line[0].x, line[0].y);
-    ctx.lineTo(line[1].x, line[1].y);
+    ctx.moveTo(line[0].x, line[0].y - offsety);
+    ctx.lineTo(line[1].x, line[1].y - offsety);
     ctx.stroke();
   })
 }
@@ -88,7 +88,7 @@ function computeVal(c1, c2) {
 
   c1.x = c1.x + (radius * Math.cos(angle));
   c1.y = c1.y + (radius * Math.sin(angle));
-  c1.y -= offsety;
+  // c1.y -= offsety;
 }
 
 function getCenter() {
@@ -100,8 +100,8 @@ function getCenter() {
       p.center = true;
     }
   });
-  if (!p.center)
-    p.y -= offsety;
+  // if (!p.center)
+  //   p.y -= offsety;
   return p;
 }
 
@@ -137,7 +137,7 @@ function action(event) {
     
     case 2:
       ctx.fillStyle = "black";
-      labels.push({x:event.clientX - 5, y:event.clientY - offsety, val:document.getElementById("text_value").value});
+      labels.push({x:event.clientX - 5, y:event.clientY, val:document.getElementById("text_value").value});
       ctx.fillText(document.getElementById("text_value").value, event.clientX - 5, event.clientY - offsety);
       break;
     
@@ -147,8 +147,8 @@ function action(event) {
         computeVal(p1, p2);
       if(p2.center)
         computeVal(p2, p1); // the first argument is always changed
-      ctx.moveTo(p1.x, p1.y); lines.push([p1, p2]);
-      ctx.lineTo(p2.x, p2.y); ctx.stroke(); state = 1; checkState(state);
+      ctx.moveTo(p1.x, p1.y - offsety); lines.push([p1, p2]);
+      ctx.lineTo(p2.x, p2.y - offsety); ctx.stroke(); state = 1; checkState(state);
       break;
   }
 }
