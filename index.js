@@ -2,13 +2,32 @@ var state = 0;
 var canvas= document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 let circles = [], radius = 25, offsety = 58;
+let labels = [], lines = [];
 var btns = [document.getElementById("draw"), document.getElementById("line"), document.getElementById("text")];
+var save_ = document.getElementById("save");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 ctx.fillStyle="cyan";
 ctx.font = "22px Arial";
+
+function save() {
+  let data_ = {'circles': circles, 'labels':labels, 'lines':lines};
+  let name = 'datax.txt';
+  let type = 'text/plain';
+  var file = new Blob([JSON.stringify(data_)], {type: type});
+  var a = document.createElement("a"),
+  url = URL.createObjectURL(file);
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);  
+  }, 0);
+}
 
 function isIntersect(point, c2) {
   return Math.sqrt((point.x-c2.x) ** 2 + (point.y - c2.y) ** 2) < radius;
@@ -73,6 +92,7 @@ function action(event) {
     
     case 2:
       ctx.fillStyle = "black";
+      labels.push({x:event.clientX - 5, y:event.clientY - offsety, val:document.getElementById("text_value").value});
       ctx.fillText(document.getElementById("text_value").value, event.clientX - 5, event.clientY - offsety);
       break;
     
@@ -82,7 +102,7 @@ function action(event) {
         computeVal(p1, p2);
       if(p2.center)
         computeVal(p2, p1); // the first argument is always changed
-      ctx.moveTo(p1.x, p1.y);
+      ctx.moveTo(p1.x, p1.y); lines.push([p1, p2]);
       ctx.lineTo(p2.x, p2.y); ctx.stroke(); state = 1; checkState(state);
       break;
   }
@@ -98,3 +118,4 @@ for(let i = 0; i < btns.length; i++) {
 }
 
 canvas.addEventListener("click", action);
+save_.addEventListener("click", save);
