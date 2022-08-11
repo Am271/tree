@@ -15,6 +15,7 @@ function drawAll(obj) { //invoked only when loading a file
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   circles = obj.circles; labels = obj.labels; lines = obj.lines;
   
+  ctx.fillStyle="cyan";
   circles.forEach(circle => {
     ctx.beginPath();
     ctx.arc(circle.x, circle.y - offsety, radius, 0, 2 * Math.PI);
