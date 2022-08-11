@@ -13,9 +13,15 @@ ctx.fillStyle="cyan";
 ctx.font = "22px Arial";
 
 function save() {
+  let cdate = new Date();
   let data_ = {'circles': circles, 'labels':labels, 'lines':lines};
-  let name = 'datax.txt';
-  let type = 'text/plain';
+  let name = cdate.getDate() + '_'
+             + (cdate.getMonth() + 1) + '_'
+             + cdate.getFullYear() + '_'
+             + cdate.getHours() + '_'
+             + cdate.getMinutes() + '_'
+             + 'save.json'
+  let type = 'application/json';
   var file = new Blob([JSON.stringify(data_)], {type: type});
   var a = document.createElement("a"),
   url = URL.createObjectURL(file);
