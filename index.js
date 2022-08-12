@@ -13,6 +13,11 @@ canvas.height = window.innerHeight;
 ctx.fillStyle="cyan";
 ctx.font = "22px Arial";
 
+function clearAll() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
 function drawAll(obj) { //invoked only when loading a file
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   circles = obj.circles; labels = obj.labels; lines = obj.lines;
@@ -169,4 +174,6 @@ document.getElementById("load").addEventListener("click", load);
 
 window.addEventListener('resize', function(event){
   offsety = document.getElementById('canvas').offsetTop;
+  clearAll();
+  drawAll({'circles':circles, 'lines':lines, 'labels':labels});
 });
